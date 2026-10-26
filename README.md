@@ -3,7 +3,7 @@
 Jeu de découverte et de mémorisation de citations, proverbes et maximes.
 
 - [Prototype alpha](https://tigreoslam23.github.io/ADM-Academie-des-Mots/) : six missions du chapitre I, conservées pour comparaison.
-- [Atelier ADM 2.4](https://tigreoslam23.github.io/ADM-Academie-des-Mots/adm-v03.html) : Mots en désordre, Carnet, Mémoire et progression.
+- [Atelier ADM 2.5](https://tigreoslam23.github.io/ADM-Academie-des-Mots/adm-v03.html) : Mots en désordre, Carnet, Mémoire et progression.
 
 Dans Mots en désordre, un mot apparaît brièvement à la fois dans un ordre aléatoire. Le joueur fige la révélation et saisit la citation mot par mot au clavier ADM compact, sans touches accentuées. Les lettres saisies et dévoilées sont affichées en capitales sans accents ; les ligatures se saisissent avec deux lettres (Œ → OE). Les citations réussies rejoignent son Carnet avec attribution, thème, sens et prochaine révision. Quand un thème ou les textes disponibles sont épuisés, l’interface l’explique et propose Carnet, Mémoire ou un autre thème.
 
@@ -44,3 +44,7 @@ Trente fiches q122 à q151 ont été ajoutées : cinq dans chacune des six colle
 ## Atelier 2.4 — Carnet et collections
 
 Le Carnet permet de rechercher une citation ou un auteur sans tenir compte des accents, de filtrer par thème et par état de révision, puis de trier les résultats. Les citations s'affichent par groupes de vingt pour faciliter la lecture sur mobile. L'état d'une collection indique si tous les textes actuellement disponibles sont découverts ; un sceau déjà acquis reste acquis lorsque la collection s'agrandit. La banque demeure à 150 textes jouables : les prochains lots éditoriaux suivront séparément.
+
+## Atelier 2.5 — choix des révisions dans Mémoire
+
+Les citations à réviser aujourd'hui sont visibles dans Mémoire et peuvent être choisies directement ; la liste s'ouvre par groupes de cinq. L'entraînement comporte une recherche sans accents dans les citations et les auteurs, un filtre par thème, puis le choix du niveau. La recherche ne modifie pas les échéances de révision : les essais libres restent sans points. Les profils, grades, sceaux et parties en cours conservent leur fonctionnement.
