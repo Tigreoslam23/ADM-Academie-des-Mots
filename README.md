@@ -3,7 +3,7 @@
 Jeu de découverte et de mémorisation de citations, proverbes et maximes.
 
 - [Prototype alpha](https://tigreoslam23.github.io/ADM-Academie-des-Mots/) : six missions du chapitre I, conservées pour comparaison.
-- [Atelier ADM 2.2](https://tigreoslam23.github.io/ADM-Academie-des-Mots/adm-v03.html) : Mots en désordre, Carnet, Mémoire et progression.
+- [Atelier ADM 2.3](https://tigreoslam23.github.io/ADM-Academie-des-Mots/adm-v03.html) : Mots en désordre, Carnet, Mémoire et progression.
 
 Dans Mots en désordre, un mot apparaît brièvement à la fois dans un ordre aléatoire. Le joueur fige la révélation et saisit la citation mot par mot au clavier ADM compact, sans touches accentuées. Les lettres saisies et dévoilées sont affichées en capitales sans accents ; les ligatures se saisissent avec deux lettres (Œ → OE). Les citations réussies rejoignent son Carnet avec attribution, thème, sens et prochaine révision. Quand un thème ou les textes disponibles sont épuisés, l’interface l’explique et propose Carnet, Mémoire ou un autre thème.
 
@@ -36,3 +36,7 @@ La première ouverture avec un ancien profil effectue un recalcul unique du grad
 La banque atteint 121 fiches conservées par identifiant, dont 120 formulations distinctes jouables. Le doublon historique q71 demeure consultable dans les anciens Carnets et exclu des nouveaux tirages. Les nouveaux identifiants q109 à q121 préservent les anciennes parties.
 
 Ce lot documente sept extraits de philosophie (Montesquieu, Pascal, La Rochefoucauld et Diderot), cinq extraits de littérature (Beaumarchais, Buffon, George Sand et Baudelaire) et un texte de Condorcet rattaché à Histoire. Chaque fiche indique une source consultable, une explication et un contexte. Les 13 textes ont été contrôlés contre les formulations jouables existantes pour éviter les doublons malgré les différences de ponctuation. L'objectif éditorial demeure 300 entrées, puis 500.
+
+## Atelier 2.3 — banque portée à 150 textes
+
+Trente fiches q122 à q151 ont été ajoutées : cinq dans chacune des six collections existantes. Les proverbes atteignent leur cible éditoriale initiale de 55, tandis que les autres collections continuent de grandir. Chaque nouvelle fiche indique sa référence consultable, son sens et un contexte ; les extraits de textes historiques sont présentés comme tels. La banque comporte 151 identifiants conservés, dont 150 formulations jouables ; q71 reste dans les anciens Carnets et hors des nouveaux tirages en raison de son doublon avec q23. Les formulations jouables ont été contrôlées après normalisation des accents et de la ponctuation. Objectif suivant : 300 textes, puis 500.
