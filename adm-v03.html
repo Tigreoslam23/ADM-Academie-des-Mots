@@ -25,7 +25,7 @@
 <body><div id="app">
   <header><div><div class="brand">✦ ADM</div><small>L’Académie des Mots</small></div><div class="tools"><button id="homeButton" class="quiet hidden">Accueil</button><button id="settingsButton" class="quiet" aria-label="Réglages">⚙ Réglages</button></div></header>
   <main id="screen"></main>
-  <footer>Atelier 1.7 · 84 textes avec références consultables · banque de 300 en préparation.</footer>
+  <footer>Atelier 1.8 · 87 textes avec références consultables · banque de 300 en préparation.</footer>
 </div><div id="pauseOverlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="pauseTitle"><div class="panel"><h2 id="pauseTitle">La page est refermée</h2><p class="muted">La révélation et les points sont figés. Ta partie a été enregistrée.</p><button id="resumeButton">Reprendre ma partie</button><p><button id="pauseHome" class="quiet">Retour à l’accueil</button></p></div></div>
 <div id="settingsOverlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="settingsTitle" style="z-index:11"><div class="panel"><h2 id="settingsTitle">Réglages</h2><p class="muted">Adapte l’ambiance à ton envie.</p><label class="row"><input type="checkbox" id="motionSetting"> Animations</label><label class="row"><input type="checkbox" id="soundSetting"> Sons du jeu</label><label class="row"><input type="checkbox" id="musicSetting"> Musique</label><p class="note">La musique démarre après une interaction avec la page.</p><button id="closeSettings">Fermer</button></div></div>
 <div id="explanationOverlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="explanationTitle" aria-describedby="explanationText" style="z-index:12"><div class="panel explanation-panel"><h2 id="explanationTitle">Le sens de la citation</h2><blockquote id="explanationQuote"></blockquote><p id="explanationText"></p><p id="explanationContext" class="note"></p><button id="closeExplanation">Fermer</button></div></div>
@@ -187,6 +187,20 @@ QUOTES.push(...SELECTED_CAHIER_QUOTES.map(({number,...q})=>({
   ...q,author:"Proverbe français",source:`Charles Cahier, Quelque six mille proverbes, 1856, no ${number}`,
   sourceUrl:PROVERB_SOURCE,theme:"Proverbes",era:"Attesté en 1856",type:"Proverbe"
 })));
+// Additional reader selections; 1352 is q44 and 1578 is a punctuation variant of q45 (1375).
+const FURTHER_CAHIER_QUOTES=[
+  {id:"q85",number:1461,text:"Tel est pris, qui croyait prendre.",difficulty:1,meaning:"Une personne qui préparait un piège ou cherchait à tromper quelqu'un peut finir elle-même victime de son stratagème. Le proverbe souligne ce retournement.",anecdote:"Cette formulation avec une virgule est attestée au numéro 1461 du recueil."},
+  {id:"q86",number:1491,text:"Chose promise, chose due.",difficulty:1,meaning:"Une promesse crée une attente : celui qui l'a faite doit s'efforcer de la tenir. La formule invite à parler avec responsabilité et à respecter sa parole.",anecdote:"Cahier place cette maxime au numéro 1491 parmi les proverbes relatifs aux promesses."},
+  {id:"q87",number:1557,text:"Plus on est de fous, plus on rit.",difficulty:1,meaning:"Une activité conviviale peut devenir plus joyeuse quand davantage de personnes y participent. Le mot « fous » est ici une plaisanterie sur l'ambiance du groupe.",anecdote:"La formulation figure au numéro 1557 du recueil de Cahier."}
+];
+QUOTES.push(...FURTHER_CAHIER_QUOTES.map(({number,...q})=>({
+  ...q,author:"Proverbe français",source:`Charles Cahier, Quelque six mille proverbes, 1856, no ${number}`,
+  sourceUrl:PROVERB_SOURCE,theme:"Proverbes",era:"Attesté en 1856",type:"Proverbe"
+})));
+Object.assign(QUOTES.find(q=>q.id==="q45"),{
+  source:"Charles Cahier, Quelque six mille proverbes, 1856, nos 1375 et 1578",
+  anecdote:"Cahier donne deux fois ce proverbe : sans virgule au numéro 1375 (version jouable), avec une virgule après « roule » au numéro 1578."
+});
 const BY_ID=Object.fromEntries(QUOTES.map(q=>[q.id,q]));
 const FORMATS={express:5,classique:10,marathon:15,infini:Infinity};
 const MODES=[
