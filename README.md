@@ -3,7 +3,7 @@
 Jeu de découverte et de mémorisation de citations, proverbes et maximes.
 
 - [Prototype alpha](https://tigreoslam23.github.io/ADM-Academie-des-Mots/) : six missions du chapitre I, conservées pour comparaison.
-- [Atelier ADM 2.6](https://tigreoslam23.github.io/ADM-Academie-des-Mots/adm-v03.html) : Mots en désordre, Carnet, Mémoire et progression.
+- [Atelier ADM 2.7](https://tigreoslam23.github.io/ADM-Academie-des-Mots/adm-v03.html) : Mots en désordre, Carnet, Mémoire et progression.
 
 Dans Mots en désordre, un mot apparaît brièvement à la fois dans un ordre aléatoire. Le joueur fige la révélation et saisit la citation mot par mot au clavier ADM compact, sans touches accentuées. Les lettres saisies et dévoilées sont affichées en capitales sans accents ; les ligatures se saisissent avec deux lettres (Œ → OE). Les citations réussies rejoignent son Carnet avec attribution, thème, sens et prochaine révision. Quand un thème ou les textes disponibles sont épuisés, l’interface l’explique et propose Carnet, Mémoire ou un autre thème.
 
@@ -52,3 +52,7 @@ Les citations à réviser aujourd'hui sont visibles dans Mémoire et peuvent êt
 ## Atelier 2.6 — sauvegardes transportables
 
 Depuis Réglages, un fichier JSON peut être téléchargé avec les profils, Carnets, points, grades, sceaux, révisions et parties interrompues. L'import d'une sauvegarde ADM compatible ajoute ses profils sans remplacer ceux du navigateur ; les noms homonymes reçoivent un suffixe. Sur un appareil vierge, le profil actif et les réglages sont également restaurés. Un fichier incompatible ou une écriture locale impossible laisse les profils présents intacts. Le fichier reste sous le contrôle du joueur : aucune synchronisation automatique ni transmission à un serveur n'est introduite.
+
+## Atelier 2.7 — vitrine des collections
+
+La page Ma progression montre six médaillons propres aux collections, avec leur nombre de textes découverts et une jauge. Le sceau acquis reste doré si de nouveaux textes sont ajoutés ; la jauge reprend alors la progression du lot actuel. Chaque collection a un bouton pour découvrir ses textes restants ou, si elle est terminée, rejouer sans points. L'accès direct respecte la confirmation déjà prévue lorsqu'une partie est interrompue et conserve les grades, sceaux, Carnets et sauvegardes.
