@@ -3,9 +3,9 @@
 Jeu de découverte et de mémorisation de citations, proverbes et maximes.
 
 - [Prototype alpha](https://tigreoslam23.github.io/ADM-Academie-des-Mots/) : six missions du chapitre I, conservées pour comparaison.
-- [Atelier ADM 1.0](https://tigreoslam23.github.io/ADM-Academie-des-Mots/adm-v03.html) : Mots en désordre, Carnet, Mémoire et progression.
+- [Atelier ADM 1.1](https://tigreoslam23.github.io/ADM-Academie-des-Mots/adm-v03.html) : Mots en désordre, Carnet, Mémoire et progression.
 
-Dans Mots en désordre, un mot apparaît brièvement à la fois dans un ordre aléatoire. Le joueur fige la révélation et saisit la citation mot par mot au clavier. Les citations réussies rejoignent son Carnet avec attribution, thème, sens et prochaine révision. Quand un thème ou les 39 textes disponibles sont épuisés, l’interface l’explique et propose Carnet, Mémoire ou un autre thème.
+Dans Mots en désordre, un mot apparaît brièvement à la fois dans un ordre aléatoire. Le joueur fige la révélation et saisit la citation mot par mot au clavier ADM compact, sans touches accentuées. Les lettres saisies et dévoilées sont affichées en capitales sans accents ; les ligatures se saisissent avec deux lettres (Œ → OE). Les citations réussies rejoignent son Carnet avec attribution, thème, sens et prochaine révision. Quand un thème ou les 39 textes disponibles sont épuisés, l’interface l’explique et propose Carnet, Mémoire ou un autre thème.
 
 Mémoire propose trois exercices : mots cachés avec longueur indiquée, mots cachés sans longueur, puis citation entière. L’entraînement est libre et sans points. Les révisions programmées font progresser une citation après trois réussites aux échéances de 1, 3 et 7 jours ; une erreur reporte la tentative au lendemain au même niveau.
 
