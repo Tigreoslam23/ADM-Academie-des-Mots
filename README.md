@@ -3,7 +3,7 @@
 Jeu de découverte et de mémorisation de citations, proverbes et maximes.
 
 - [Prototype alpha](https://tigreoslam23.github.io/ADM-Academie-des-Mots/) : six missions du chapitre I, conservées pour comparaison.
-- [Atelier ADM 2.5](https://tigreoslam23.github.io/ADM-Academie-des-Mots/adm-v03.html) : Mots en désordre, Carnet, Mémoire et progression.
+- [Atelier ADM 2.6](https://tigreoslam23.github.io/ADM-Academie-des-Mots/adm-v03.html) : Mots en désordre, Carnet, Mémoire et progression.
 
 Dans Mots en désordre, un mot apparaît brièvement à la fois dans un ordre aléatoire. Le joueur fige la révélation et saisit la citation mot par mot au clavier ADM compact, sans touches accentuées. Les lettres saisies et dévoilées sont affichées en capitales sans accents ; les ligatures se saisissent avec deux lettres (Œ → OE). Les citations réussies rejoignent son Carnet avec attribution, thème, sens et prochaine révision. Quand un thème ou les textes disponibles sont épuisés, l’interface l’explique et propose Carnet, Mémoire ou un autre thème.
 
@@ -48,3 +48,7 @@ Le Carnet permet de rechercher une citation ou un auteur sans tenir compte des a
 ## Atelier 2.5 — choix des révisions dans Mémoire
 
 Les citations à réviser aujourd'hui sont visibles dans Mémoire et peuvent être choisies directement ; la liste s'ouvre par groupes de cinq. L'entraînement comporte une recherche sans accents dans les citations et les auteurs, un filtre par thème, puis le choix du niveau. La recherche ne modifie pas les échéances de révision : les essais libres restent sans points. Les profils, grades, sceaux et parties en cours conservent leur fonctionnement.
+
+## Atelier 2.6 — sauvegardes transportables
+
+Depuis Réglages, un fichier JSON peut être téléchargé avec les profils, Carnets, points, grades, sceaux, révisions et parties interrompues. L'import d'une sauvegarde ADM compatible ajoute ses profils sans remplacer ceux du navigateur ; les noms homonymes reçoivent un suffixe. Sur un appareil vierge, le profil actif et les réglages sont également restaurés. Un fichier incompatible ou une écriture locale impossible laisse les profils présents intacts. Le fichier reste sous le contrôle du joueur : aucune synchronisation automatique ni transmission à un serveur n'est introduite.
