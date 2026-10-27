@@ -3,7 +3,7 @@
 Jeu de découverte et de mémorisation de citations, proverbes et maximes.
 
 - [Prototype alpha](https://tigreoslam23.github.io/ADM-Academie-des-Mots/) : six missions du chapitre I, conservées pour comparaison.
-- [Atelier ADM 2.10](https://tigreoslam23.github.io/ADM-Academie-des-Mots/adm-v03.html) : Mots en désordre, Carnet, Mémoire et progression.
+- [Atelier ADM 2.11](https://tigreoslam23.github.io/ADM-Academie-des-Mots/adm-v03.html) : Mots en désordre, Carnet, Mémoire et progression.
 
 Dans Mots en désordre, un mot apparaît brièvement à la fois dans un ordre aléatoire. Le joueur fige la révélation et saisit la citation mot par mot au clavier ADM compact, sans touches accentuées. Les lettres saisies et dévoilées sont affichées en capitales sans accents ; les ligatures se saisissent avec deux lettres (Œ → OE). Les citations réussies rejoignent son Carnet avec attribution, thème, sens et prochaine révision. Quand un thème ou les textes disponibles sont épuisés, l’interface l’explique et propose Carnet, Mémoire ou un autre thème.
 
@@ -70,3 +70,7 @@ Le profil peut afficher un cadre décoratif autour de son avatar. Sans cadre res
 Les six choix d’avatar sont désormais des personnages illustrés et transparents : Corbeau poète, Blaireau archiviste, Hibou lecteur, Renard conteur, Lièvre astronome et Chat philosophe. Les choix déjà enregistrés restent valides : les anciens identifiants Plume, Livre et Astrolabe affichent respectivement Corbeau, Blaireau et Lièvre. La galerie et le profil montrent les portraits ; les images WebP sont adaptées à l’affichage mobile.
 
 Chaque récompense de grade a une forme, une couleur et un insigne propres : Plume, Lettré, Érudit, Maître et Grand Académicien. Le sceau de collection garde son ornement distinct. Les déblocages, les scores et les sauvegardes conservent leurs règles précédentes.
+
+## Atelier 2.11 — favoris du Carnet
+
+Chaque citation découverte peut être marquée comme favorite dans le Carnet. Le Carnet affiche le nombre de favoris et permet de combiner le filtre « Favoris uniquement » avec la recherche, le thème et l’état de révision. Dans Mémoire, le même filtre limite les citations proposées pour l’entraînement libre ; les révisions programmées du jour restent indépendantes. Les favoris appartiennent à chaque profil, sont inclus dans l’export JSON et sont initialisés à vide lors de l’import d’une ancienne sauvegarde. L’import rejette les favoris absents du Carnet ou répétés.
