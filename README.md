@@ -3,7 +3,7 @@
 Jeu de découverte et de mémorisation de citations, proverbes et maximes.
 
 - [Prototype alpha](https://tigreoslam23.github.io/ADM-Academie-des-Mots/) : six missions du chapitre I, conservées pour comparaison.
-- [Atelier ADM 2.8](https://tigreoslam23.github.io/ADM-Academie-des-Mots/adm-v03.html) : Mots en désordre, Carnet, Mémoire et progression.
+- [Atelier ADM 2.9](https://tigreoslam23.github.io/ADM-Academie-des-Mots/adm-v03.html) : Mots en désordre, Carnet, Mémoire et progression.
 
 Dans Mots en désordre, un mot apparaît brièvement à la fois dans un ordre aléatoire. Le joueur fige la révélation et saisit la citation mot par mot au clavier ADM compact, sans touches accentuées. Les lettres saisies et dévoilées sont affichées en capitales sans accents ; les ligatures se saisissent avec deux lettres (Œ → OE). Les citations réussies rejoignent son Carnet avec attribution, thème, sens et prochaine révision. Quand un thème ou les textes disponibles sont épuisés, l’interface l’explique et propose Carnet, Mémoire ou un autre thème.
 
@@ -60,3 +60,7 @@ La page Ma progression montre six médaillons propres aux collections, avec leur
 ## Atelier 2.8 — avatars de bibliothèque
 
 Chaque profil peut choisir librement l’un de six avatars dessinés pour l’atelier : Plume, Livre, Hibou, Renard, Astrolabe ou Chat. L’avatar apparaît dans l’en-tête et dans la sélection des profils. Ce choix est propre au profil, conservé localement et inclus dans l’export JSON ; les sauvegardes antérieures restent importables et reçoivent Plume par défaut. Il est décoratif et ne change ni les points, ni les grades, ni les sceaux.
+
+## Atelier 2.9 — ornements d’avatar
+
+Le profil peut afficher un cadre décoratif autour de son avatar. Sans cadre reste disponible ; Plume dorée, Lettré et Érudit se débloquent lorsque le grade correspondant est acquis dans l’un des deux modes jouables, et Sceau lumineux dès qu’un sceau de collection est obtenu. La galerie montre les conditions des cadres encore verrouillés. Le cadre choisi est propre au profil et voyage avec sa sauvegarde JSON. Les anciens fichiers restent importables et reçoivent Sans cadre ; un cadre importé sans condition remplie est simplement désactivé. Aucun ornement ne modifie les scores ou les seuils.
