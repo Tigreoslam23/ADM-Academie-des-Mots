@@ -48,7 +48,7 @@
 <body><div id="app">
   <header><div><div class="brand">✦ ADM</div><small>L’Académie des Mots</small></div><div class="tools"><span id="activeAvatar" class="current-profile hidden"></span><button id="homeButton" class="quiet hidden">Accueil</button><button id="settingsButton" class="quiet" aria-label="Réglages">⚙ Réglages</button></div></header>
   <main id="screen"></main>
-  <footer>Atelier 2.15 · 150 textes jouables · Citation en péril.</footer>
+  <footer>Atelier 2.16 · 150 textes jouables · Intrus accordés.</footer>
 </div><div id="pauseOverlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="pauseTitle"><div class="panel"><h2 id="pauseTitle">La page est refermée</h2><p class="muted">La révélation et les points sont figés. Ta partie a été enregistrée.</p><button id="resumeButton">Reprendre ma partie</button><p><button id="pauseHome" class="quiet">Retour à l’accueil</button></p></div></div>
 <div id="settingsOverlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="settingsTitle" style="z-index:11"><div class="panel"><h2 id="settingsTitle">Réglages</h2><p class="muted">Adapte l’ambiance à ton envie.</p><label class="row"><input type="checkbox" id="motionSetting"> Animations</label><label class="row"><input type="checkbox" id="soundSetting"> Sons du jeu</label><label class="row"><input type="checkbox" id="musicSetting"> Musique</label><p class="note">La musique démarre après une interaction avec la page.</p><hr class="thin"><h3>Sauvegarde des profils</h3><p class="note">Télécharge un fichier pour garder tes Carnets, tes points, tes grades et tes parties en cours. Sur un autre appareil, importe ce fichier ici. Les profils déjà présents ne sont jamais écrasés.</p><div class="actions"><button id="exportBackup" class="secondary">Télécharger ma sauvegarde</button><button id="importBackup" class="secondary">Importer une sauvegarde</button></div><input id="backupFile" class="hidden" type="file" accept=".json,application/json" aria-label="Fichier de sauvegarde ADM"><p id="backupStatus" class="note" role="status" aria-live="polite"></p><button id="closeSettings">Fermer</button></div></div>
 <div id="explanationOverlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="explanationTitle" aria-describedby="explanationText" style="z-index:12"><div class="panel explanation-panel"><h2 id="explanationTitle">Le sens de la citation</h2><blockquote id="explanationQuote"></blockquote><p id="explanationText"></p><p id="explanationContext" class="note"></p><button id="closeExplanation">Fermer</button></div></div>
@@ -339,6 +339,125 @@ const IMPOSTOR_DECOYS={
   "Proverbes":["pierre","pain","soleil","temps","chemin","parole","chance","pluie"],
   "Mythologie":["dieu","héros","oracle","destin","montagne","voyage","ombre","couronne"]
 };
+// Each entry names a complete token in the source quote and its grammatical class.
+// Decoys are inflected before selection; no article, elision or neighbouring agreement changes.
+const IMPOSTOR_FORMS={
+  m:["chemin","secret","livre","monde","jardin","courage","silence","souvenir","soleil"],
+  f:["mémoire","parole","lumière","histoire","pensée","liberté","patience","force","nature"],
+  mp:["livres","chemins","souvenirs","secrets","voyages","discours","mystères"],
+  fp:["paroles","idées","pensées","histoires","lumières","raisons","images"],
+  inf:["marcher","vivre","sourire","dormir","grandir","revenir"],
+  adverb:["souvent","parfois","toujours","encore"],
+  time:["demain","bientôt","maintenant"],
+  pronoun:["chacun","personne","autrui"],
+  pronounPlural:["certains","plusieurs","beaucoup"],
+  adjF:["claire","douce","sombre","froide","longue"],
+  adjMP:["prêts","capables","heureux","libres"]
+};
+// Editorial choices avoid contractions and positions where a following word would betray agreement.
+// A small list of local replacements handles fixed expressions and verb constructions.
+const IMPOSTOR_RULES={
+  q01:["courir",["marcher","dormir","sourire"]],q02:["jardin","m"],q03:["pense",["rêve","doute","parle"]],
+  q04:["force","f"],q05:["risque",["tente","cherche","avance"]],q06:["temps","m"],q07:["parole","f"],
+  q08:["nid","m"],q09:["tard","time"],q10:["attendre",["agir","revenir","marcher"]],
+  q11:["fumée",["brume","vapeur","poussière"]],q12:["pluie",["neige","brume","tempête"]],q13:["moine",["prêtre","sage","maître"]],q14:["murs",["arbres","livres","voisins"]],q15:["nuit","f"],
+  q16:["vaillant",["patient","prudent","ardent"]],q17:["mieux",["plus","moins","davantage"]],q18:["peau","f"],
+  q19:["raison","f"],q20:["flatteur",["menteur","rêveur","lecteur"]],q21:["souvent","adverb"],
+  q22:["peine","f"],q23:["ciel","m"],q24:["manger",["danser","dormir","rire"]],
+  q25:["Tous",["Chacun","Plusieurs","Certains"]],q26:["cœur","m"],q27:["roseau","m"],
+  q28:["fers",["liens","pièges","chaînes"]],q29:["choses","fp"],q30:["absents",["retardataires","voisins","voyageurs"]],q31:["chat",["chien","lapin","livre"]],
+  q32:["seul",["libre","heureux","sage"]],q33:["Ventre",["Corps","Esprit","Homme"]],q34:["comptes","mp"],
+  q35:["amis","mp"],q36:["vient",["grandit","revient","passe"]],q37:["homme","m"],
+  q38:["royaume","m"],q39:["âne","m"],q40:["conseilleurs",["conseillers","bavards","menteurs"]],q41:["casser",["briser","compter","cacher"]],
+  q42:["panier","m"],q43:["brille",["passe","change","rayonne"]],q44:["ruisseaux","mp"],
+  q45:["mousse",["poussière","boue","terre"]],q46:["poire",["gourde","bouteille","réserve"]],q47:["petit",["secret","étranger","pauvre"]],
+  q48:["ose",["tente","rêve","cherche"]],q49:["péril","m"],q50:["liberté","f"],
+  q51:["moi","m"],q52:["mieux","m"],q53:["métier",["travail","art","talent"]],q54:["dessein","m"],
+  q55:["sein",["corps","visage","bras"]],q56:["hasard","m"],q57:["maison",["cabane","demeure","muraille"]],q58:["éclair","m"],
+  q59:["nature","f"],q60:["sens",["cadre","domaine","langage"]],q61:["moyens",["outils","instruments","procédés"]],q62:["droits",["pouvoirs","devoirs","privilèges"]],
+  q63:["principe","m"],q64:["liberté","f"],q65:["loi","f"],q66:["droits",["pouvoirs","devoirs","privilèges"]],
+  q67:["droit",["pouvoir","devoir","choix"]],q68:["tout",["chacun","autrui"]],q69:["opérations","fp"],
+  q70:["encore","adverb"],q72:["châtie",["aide","guide","protège"]],q73:["chemin",["sentier","voyage","fleuve"]],
+  q74:["cordonniers",["maçons","forgerons","boulangers"]],q75:["parole","f"],q76:["faire",["dire","voir","apprendre"]],
+  q77:["femme","f"],q78:["guerre","f"],q79:["seigneur",["monarque","prince","héros"]],q80:["intentions","fp"],
+  q81:["main","f"],q82:["lit","m"],q83:["queue","f"],q84:["nuit","f"],
+  q85:["pris",["perdu","sauvé","surpris"]],q86:["promise",["perdue","donnée","reçue"]],
+  q87:["fous",["joueurs","convives","amis"]],q88:["lui",["elle","eux","nous"]],q89:["principal",["secret","devoir","problème"]],
+  q90:["loi","f"],q91:["résolus","adjMP"],q92:["silence","m"],q93:["but",["principe","devoir","rôle"]],
+  q94:["opinions","fp"],q95:["pensées","fp"],q96:["garantie","f"],q97:["temps","m"],
+  q98:["jugements",["discours","regards","décrets"]],q99:["penser",["écrire","répondre","réfléchir"]],
+  q100:["simple",["claire","sûre","rapide"]],q101:["fil","m"],q102:["Damoclès",["Hermès","Ulysse","Achille"]],
+  q103:["boîte","f"],q104:["rocher","m"],q105:["talon","m"],q106:["écuries","fp"],
+  q107:["cheval","m"],q108:["Tomber",["Passer","Glisser","Courir"]],q109:["pouvoir","m"],
+  q110:["rapports","mp"],q111:["principes","mp"],q112:["hommage","m"],
+  q113:["reproches","mp"],q114:["refus",["besoin","goût","secret"]],q115:["liberté","f"],q116:["peine","f"],
+  q117:["droit","m"],q118:["servitude","f"],q119:["style","m"],q120:["nature","f"],
+  q121:["beauté",["lumière","nature","douceur"]],q122:["commence",["passe","finit","débute"]],
+  q123:["froide",["tiède","claire","salée"]],q124:["chat",["chien","maître","père"]],q125:["bouche",["dentition","robe","crinière"]],
+  q126:["chien",["chat","cheval","âne"]],q127:["supplice","m"],q128:["lit","m"],q129:["tonneau","m"],
+  q130:["Trancher",["Défaire","Couper","Dénouer"]],q131:["Sphinx",["Cyclope","Minotaure","Phénix"]],
+  q132:["langage","m"],q133:["connu",["passé","visible","présent"]],q134:["travail","m"],
+  q135:["solutions",["réponses","attitudes","opinions"]],q136:["découverte","f"],q137:["Savoir",["Vivre","Écrire","Parler"]],
+  q138:["forme",["trace","marque","part"]],q139:["sens","m"],q140:["métier","m"],q141:["examiner",["observer","critiquer","chercher"]],
+  q142:["valeur","f"],q143:["campagne","f"],q144:["apparition",["révélation","vision","rencontre"]],q145:["vue",["rencontre","venue","apparition"]],
+  q146:["beauté","f"],q147:["but","m"],q148:["dette",["obligation","promesse","charge"]],q149:["cas",["faits","actes","délits"]],
+  q150:["nation","f"],q151:["colonies",["contrées","provinces","terres"]]
+};
+// Several citations offer a second reviewed position, chosen at random on replay.
+const IMPOSTOR_RULES_EXTRA={
+  q02:[["cultiver",["entretenir","soigner","préparer"]]],
+  q04:[["fait",["donne","crée","forme"]]],q07:[["silence","m"]],
+  q11:[["feu","m"]],q12:[["temps","m"]],q13:[["fait",["crée","forme","guide"]]],
+  q14:[["oreilles","fp"]],q15:[["conseil","m"]],
+  q19:[["fort",["faible","riche","sage"]]],q26:[["raison","f"]],
+  q34:[["amis","mp"]],q35:[["besoin","m"]],
+  q41:[["œufs",["fruits","noix","pommes"]]],q43:[["or",["argent","diamant","trésor"]]],
+  q44:[["rivières","fp"]],q49:[["gloire","f"]],q50:[["qualité","f"]],
+  q53:[["livre",["roman","poème","récit"]]],q54:[["front","m"]],
+  q56:[["esprits",["savants","chercheurs","lecteurs"]]],
+  q57:[["pierres",["briques","planches","tuiles"]]],q58:[["nuit","f"]],q59:[["source","f"]],
+  q60:[["expérience","f"]],q61:[["progrès",["résultats","effets","changements"]]],
+  q62:[["hommes",["citoyens","enfants","peuples"]]],
+  q63:[["Nation",["République","communauté","société"]]],
+  q65:[["volonté",["pensée","raison","intention"]]],
+  q66:[["Femme",["mère","citoyenne","personne"]]],
+  q69:[["nature","f"]],q70:[["plus",["moins","souvent","assez"]]],
+  q73:[["Rome",["Paris","Athènes","Lyon"]]],
+  q80:[["bonnes",["belles","fausses","vaines"]]],
+  q83:[["loup",["chien","renard","berger"]]],
+  q84:[["chats",["chiens","loups","rats"]]],
+  q85:[["prendre",["comprendre","apprendre","surprendre"]]],
+  q86:[["due",["perdue","vue","lue"]]],
+  q87:[["rit",["sourit","danse","chante"]]],
+  q88:[["moi",["toi","nous","eux"]]],q92:[["espaces","mp"]],
+  q95:[["opinions","fp"]],q97:[["force","f"]],
+  q99:[["parler",["écrire","répondre","réfléchir"]]],
+  q104:[["Sisyphe",["Tantale","Hermès","Ulysse"]]],
+  q106:[["Nettoyer",["Ranger","Visiter","Ouvrir"]]],
+  q110:[["choses","fp"]],q111:[["propositions","fp"]],
+  q112:[["vice",["crime","mensonge","mal"]]],
+  q113:[["louanges",["flatteries","critiques","paroles"]]],
+  q117:[["nature",["société","histoire","famille"]]],
+  q130:[["nœud",["lien","cordon","ruban"]]],
+  q132:[["science",["pensée","médecine","technique"]]],
+  q134:[["radium",["sodium","calcium","cuivre"]]],
+  q135:[["croire",["penser","imaginer","accepter"]]],
+  q136:[["fait",["objet","indice","élément"]]],
+  q138:[["homme",["enfant","humain","individu"]]],q139:[["chose","f"]],
+  q140:[["apprendre",["enseigner","montrer","révéler"]]],
+  q141:[["remuer",["observer","étudier","critiquer"]]],
+  q142:[["années",["saisons","études","épreuves"]]],
+  q143:[["Demain","time"]],q146:[["Cour","f"]],
+  q147:[["bonheur",["devoir","plaisir","avenir"]]],
+  q148:[["secours",["services","soutiens","soins"]]],
+  q149:[["homme",["citoyen","individu","suspect"]]],
+  q150:[["mères",["épouses","femmes","veuves"]]],
+  q151:[["possessions",["provinces","contrées","terres"]]]
+};
+function validSavedImpostor(q,target,decoy){
+  return typeof decoy==="string"&&(impostorDecoys(q,target).includes(decoy)||
+    legacyImpostorCandidates(q).includes(target)&&IMPOSTOR_DECOYS[q.theme]?.includes(decoy));
+}
 const COLLECTIONS=["Littérature","Philosophie","Histoire","Sciences","Proverbes","Mythologie"];
 const AVATARS={
   plume:{name:"Corbeau",role:"Poète",src:"assets/avatars/corbeau.webp"},
@@ -485,7 +604,7 @@ function readBackup(value){
     if(!backupRecord(impostor)||!Array.isArray(impostor.completed)||impostor.completed.length>PLAYABLE_QUOTES.length||impostor.completed.some(id=>typeof id!=="string"||!PLAYABLE_QUOTES.some(q=>q.id===id)||!p.discovered.includes(id))||new Set(impostor.completed).size!==impostor.completed.length||!Number.isFinite(impostor.points)||impostor.points<0||impostor.points>1000*impostor.completed.length)throw Error("La progression de L’Imposteur est invalide.");
     const impostorRun=p.impostorRun??null;
     if(impostorRun!==null){
-      if(!backupRecord(impostorRun)||!PLAYABLE_QUOTES.some(q=>q.id===impostorRun.id)||!backupCount(impostorRun.target)||!impostorCandidates(BY_ID[impostorRun.id]).includes(impostorRun.target)||typeof impostorRun.decoy!=="string"||!IMPOSTOR_DECOYS[BY_ID[impostorRun.id].theme]?.includes(impostorRun.decoy)||!Number.isFinite(impostorRun.elapsed)||impostorRun.elapsed<0||!backupCount(impostorRun.errors)||typeof impostorRun.replay!=="boolean"||!Array.isArray(impostorRun.wrong))throw Error("Une citation de L’Imposteur est invalide.");
+      if(!backupRecord(impostorRun)||!PLAYABLE_QUOTES.some(q=>q.id===impostorRun.id)||!backupCount(impostorRun.target)||!validSavedImpostor(BY_ID[impostorRun.id],impostorRun.target,impostorRun.decoy)||!Number.isFinite(impostorRun.elapsed)||impostorRun.elapsed<0||!backupCount(impostorRun.errors)||typeof impostorRun.replay!=="boolean"||!Array.isArray(impostorRun.wrong))throw Error("Une citation de L’Imposteur est invalide.");
       const count=tokens(BY_ID[impostorRun.id]).length,wrong=impostorRun.wrong;
       if(impostorRun.selected!==null&&(!backupCount(impostorRun.selected)||impostorRun.selected>=count)||new Set(wrong).size!==wrong.length||wrong.some(i=>!backupCount(i)||i>=count||i===impostorRun.target)||wrong.length>impostorRun.errors)throw Error("Les choix de L’Imposteur sont invalides.");
     }
@@ -500,7 +619,7 @@ function readBackup(value){
         const length=letters(words[task.target]||"").length;
         if(!backupCount(task.target)||task.target>=words.length||!length||typeof task.answer!=="string"||task.answer.length>length||!backupCount(task.bonusReveal)||!Array.isArray(task.revealOrder)||task.revealOrder.length!==length||new Set(task.revealOrder).size!==length||task.revealOrder.some(i=>!backupCount(i)||i>=length))throw Error("Le mot du défi est invalide.");
       }else if(kind==="impostor"){
-        if(!backupCount(task.target)||!impostorCandidates(q).includes(task.target)||typeof task.decoy!=="string"||!IMPOSTOR_DECOYS[q.theme]?.includes(task.decoy)||task.selected!==null&&(!backupCount(task.selected)||task.selected>=words.length)||!Array.isArray(task.wrong)||new Set(task.wrong).size!==task.wrong.length||task.wrong.some(i=>!backupCount(i)||i>=words.length||i===task.target))throw Error("L’intrus du défi est invalide.");
+        if(!backupCount(task.target)||!validSavedImpostor(q,task.target,task.decoy)||task.selected!==null&&(!backupCount(task.selected)||task.selected>=words.length)||!Array.isArray(task.wrong)||new Set(task.wrong).size!==task.wrong.length||task.wrong.some(i=>!backupCount(i)||i>=words.length||i===task.target))throw Error("L’intrus du défi est invalide.");
       }else{
         if(!Array.isArray(task.bank)||!Array.isArray(task.placed)||!Array.isArray(task.correctPositions)||task.bank.length+task.placed.length!==words.length||new Set([...task.bank,...task.placed]).size!==words.length||[...task.bank,...task.placed].some(i=>!backupCount(i)||i>=words.length)||task.selected!==null&&!task.placed.includes(task.selected)||task.correctPositions.some(i=>!backupCount(i)||i>=task.placed.length))throw Error("Le puzzle du défi est invalide.");
       }
@@ -676,12 +795,12 @@ let perilTheme="Tous les thèmes";
 const perilKind=index=>["mystery","impostor","puzzle"][index%3];
 const perilRoundEnd=stage=>PERIL_ROUNDS.slice(0,stage+1).reduce((a,b)=>a+b,0);
 function perilPool(p,replay=false){
-  return PLAYABLE_QUOTES.filter(q=>(perilTheme==="Tous les thèmes"||q.theme===perilTheme)&&(replay?p.peril.completed.includes(q.id):!p.peril.completed.includes(q.id))&&mysteryCandidates(q).length&&impostorCandidates(q).some(i=>impostorDecoys(q,i).length));
+  return PLAYABLE_QUOTES.filter(q=>(perilTheme==="Tous les thèmes"||q.theme===perilTheme)&&(replay?p.peril.completed.includes(q.id):!p.peril.completed.includes(q.id))&&mysteryCandidates(q).length&&impostorCandidates(q).some(i=>impostorDecoys(q,i).length>=2));
 }
 function makePerilTask(q,index){
   const kind=perilKind(index);
   if(kind==="mystery"){const target=shuffle(mysteryCandidates(q))[0];return {kind,target,answer:"",revealOrder:shuffle([...letters(tokens(q)[target])].map((_,i)=>i)),bonusReveal:0}}
-  if(kind==="impostor"){const target=shuffle(impostorCandidates(q).filter(i=>impostorDecoys(q,i).length))[0];return {kind,target,decoy:shuffle(impostorDecoys(q,target).slice(0,3))[0],selected:null,wrong:[]}}
+  if(kind==="impostor")return {kind,...newImpostorChoice(q),selected:null,wrong:[]};
   const indices=tokens(q).map((_,i)=>i),bank=shuffle(indices);
   if(bank.length>1&&bank.every((id,i)=>id===i))[bank[0],bank[1]]=[bank[1],bank[0]];
   return {kind,bank,placed:[],selected:null,correctPositions:[]};
@@ -777,6 +896,7 @@ function renderPeril(){
   if(run.phase==="intermission")return renderPerilIntermission();
   if(run.phase==="failed")return renderPerilFailed();
   const q=BY_ID[run.ids[run.index]],start=perilRoundEnd(run.stage-1),end=Math.min(run.ids.length,perilRoundEnd(run.stage));
+  if(run.task?.kind==="impostor")repairImpostorTask(q,run.task);
   $("screen").innerHTML=`<section class="panel"><span class="eyebrow">Citation en péril · Manche ${run.stage+1}/3</span><h2>Citation ${run.index-start+1}/${end-start}</h2><div class="row between"><span id="perilLives" class="peril-lives" aria-label="${run.lives} vies restantes"></span><span id="perilClock" class="mystery-timer"></span></div><div class="meter" role="progressbar" aria-label="Temps de la citation" aria-valuemin="0" aria-valuemax="45"><div id="perilMeter"></div></div><p class="hint">${esc(q.theme)} · ${run.replay?'Entraînement sans points':'Les citations sauvées rejoignent le Carnet.'}</p><div id="perilTask"></div><p id="feedback" class="feedback" role="status" aria-live="polite"></p><div class="actions"><button id="perilCheck">Valider</button><button id="perilBack" class="quiet">Retour au parcours</button></div></section>`;
   perilStats();renderPerilTask();$("perilCheck").onclick=checkPeril;$("perilBack").onclick=renderPerilHome;startPerilClock();
 }
@@ -836,23 +956,40 @@ function renderPerilComplete(count,total){
   $("perilAgain").onclick=renderPerilHome;$("perilNotebook").onclick=renderNotebook;$("perilProgress").onclick=renderProgress;
 }
 let impostorTheme="Tous les thèmes";
-function impostorCandidates(q){
+function legacyImpostorCandidates(q){
   const words=tokens(q).map((word,i)=>({word,i}));
   const preferred=words.filter(({word})=>/^\p{L}{4,}[,.!?;:…]?$/u.test(word)&&!MYSTERY_STOPWORDS.has(normalize(word))).map(x=>x.i);
   return preferred.length?preferred:words.filter(({word})=>/^\p{L}{3,}[,.!?;:…]?$/u.test(word)).map(x=>x.i);
 }
+function impostorCandidates(q){
+  return impostorRulesFor(q).map(({index})=>index);
+}
+function impostorRulesFor(q){
+  const rules=[IMPOSTOR_RULES[q.id],...(IMPOSTOR_RULES_EXTRA[q.id]||[])].filter(Boolean);
+  return rules.map(([original,forms])=>({index:tokens(q).findIndex(word=>normalize(word)===normalize(original)),forms})).filter(rule=>rule.index>=0);
+}
 function impostorDecoys(q,index){
+  const rule=impostorRulesFor(q).find(rule=>rule.index===index);if(!rule)return [];
   const original=normalize(tokens(q)[index]),used=new Set(tokens(q).map(normalize));
-  const candidates=(IMPOSTOR_DECOYS[q.theme]||[]).filter(word=>!used.has(normalize(word))&&normalize(word)!==original);
-  return candidates.sort((a,b)=>Math.abs(letters(a).length-original.length)-Math.abs(letters(b).length-original.length));
+  const forms=Array.isArray(rule.forms)?rule.forms:IMPOSTOR_FORMS[rule.forms]||[];
+  return forms.filter(word=>!used.has(normalize(word))&&normalize(word)!==original);
+}
+function newImpostorChoice(q){
+  const target=shuffle(impostorCandidates(q).filter(i=>impostorDecoys(q,i).length>=2))[0];
+  return target===undefined?null:{target,decoy:shuffle(impostorDecoys(q,target))[0]};
+}
+function repairImpostorTask(q,task){
+  if(!task||impostorDecoys(q,task.target).includes(task.decoy))return;
+  const choice=newImpostorChoice(q);if(!choice)return;
+  Object.assign(task,choice,{selected:null,wrong:[]});persist();
 }
 function impostorPool(p,replay=false){
-  return PLAYABLE_QUOTES.filter(q=>(impostorTheme==="Tous les thèmes"||q.theme===impostorTheme)&&(replay?p.impostor.completed.includes(q.id):!p.impostor.completed.includes(q.id))&&impostorCandidates(q).some(i=>impostorDecoys(q,i).length));
+  return PLAYABLE_QUOTES.filter(q=>(impostorTheme==="Tous les thèmes"||q.theme===impostorTheme)&&(replay?p.impostor.completed.includes(q.id):!p.impostor.completed.includes(q.id))&&impostorCandidates(q).some(i=>impostorDecoys(q,i).length>=2));
 }
 function renderImpostorHome(){
   const p=profile();if(!p)return renderHome();refreshProgress(p);screen="impostor-home";stopClock();$("homeButton").classList.remove("hidden");
   const themes=["Tous les thèmes",...new Set(PLAYABLE_QUOTES.map(q=>q.theme))],remaining=impostorPool(p),played=impostorPool(p,true);
-  $("screen").innerHTML=`<section class="hero"><div class="eyebrow">Cinquième mode</div><h1>L’Imposteur</h1><p>Un mot de la citation a été remplacé. Touche le mot suspect, puis valide ton choix.</p></section><section class="panel"><h2>Ton parcours</h2><p class="muted">${p.impostor.completed.length} intrus repéré(s) · ${p.impostor.points} points · grade ${esc(GRADES[p.grades.impostor||0])}.</p><label>Thème<select id="impostorTheme">${themes.map(t=>`<option value="${esc(t)}" ${impostorTheme===t?'selected':''}>${esc(t)}</option>`).join("")}</select></label><p class="note">${remaining.length} nouvelle(s) citation(s) disponible(s) dans ce thème.</p><div class="actions"><button id="impostorStart" ${remaining.length?'':'disabled'}>Nouvelle citation →</button>${p.impostorRun?'<button id="impostorResume" class="secondary">Reprendre ma citation</button>':''}<button id="impostorReplay" class="quiet" ${played.length?'':'disabled'}>Rejouer sans points</button></div></section>`;
+  $("screen").innerHTML=`<section class="hero"><div class="eyebrow">Cinquième mode</div><h1>L’Imposteur</h1><p>Un mot de la citation a été remplacé. Touche le mot suspect, puis valide ton choix. L’intrus change au hasard quand tu rejoues.</p></section><section class="panel"><h2>Ton parcours</h2><p class="muted">${p.impostor.completed.length} intrus repéré(s) · ${p.impostor.points} points · grade ${esc(GRADES[p.grades.impostor||0])}.</p><label>Thème<select id="impostorTheme">${themes.map(t=>`<option value="${esc(t)}" ${impostorTheme===t?'selected':''}>${esc(t)}</option>`).join("")}</select></label><p class="note">${remaining.length} nouvelle(s) citation(s) disponible(s) dans ce thème.</p><div class="actions"><button id="impostorStart" ${remaining.length?'':'disabled'}>Nouvelle citation →</button>${p.impostorRun?'<button id="impostorResume" class="secondary">Reprendre ma citation</button>':''}<button id="impostorReplay" class="quiet" ${played.length?'':'disabled'}>Rejouer sans points</button></div></section>`;
   $("impostorTheme").onchange=e=>{impostorTheme=e.target.value;renderImpostorHome()};
   $("impostorStart").onclick=()=>startImpostor(false);$("impostorReplay").onclick=()=>startImpostor(true);
   if($("impostorResume"))$("impostorResume").onclick=renderImpostor;
@@ -860,8 +997,7 @@ function renderImpostorHome(){
 function startImpostor(replay){
   const p=profile();if(!p)return;const pool=impostorPool(p,replay);if(!pool.length)return renderImpostorHome();
   if(p.impostorRun&&!confirm("Une citation est interrompue pour ce profil. La remplacer ?"))return;
-  const q=shuffle(pool)[0],target=shuffle(impostorCandidates(q).filter(i=>impostorDecoys(q,i).length))[0];
-  const decoy=shuffle(impostorDecoys(q,target).slice(0,3))[0];
+  const q=shuffle(pool)[0],{target,decoy}=newImpostorChoice(q);
   p.impostorRun={id:q.id,target,decoy,selected:null,wrong:[],errors:0,elapsed:0,replay};
   persist();renderImpostor();
 }
@@ -894,6 +1030,7 @@ function startImpostorClock(){
 }
 function renderImpostor(){
   const run=profile()?.impostorRun,q=BY_ID[run?.id];if(!run||!q)return renderImpostorHome();
+  repairImpostorTask(q,run);
   screen="impostor";stopClock();$("homeButton").classList.remove("hidden");
   $("screen").innerHTML=`<section class="panel"><span class="eyebrow">L’Imposteur · ${run.replay?'Entraînement':'Découverte'}</span><h2>Quel mot est intrus ?</h2><p class="hint">${esc(q.theme)} · Le texte authentique contient un autre mot à cette place. Chaque erreur éclaire un mot correct.</p><div id="impostorQuote" class="impostor-quote" aria-label="Citation contenant un mot intrus"></div><div class="meter" role="progressbar" aria-label="Temps écoulé" aria-valuemin="0" aria-valuemax="45"><div id="impostorMeter"></div></div><p id="impostorStats" class="mystery-timer"></p><p id="feedback" class="feedback" role="status" aria-live="polite"></p><div class="actions"><button id="impostorCheck">Valider mon choix</button><button id="impostorBack" class="quiet">Retour aux citations</button></div></section>`;
   renderImpostorBoard();$("impostorCheck").onclick=checkImpostor;$("impostorBack").onclick=renderImpostorHome;startImpostorClock();
