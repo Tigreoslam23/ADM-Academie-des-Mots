@@ -3,7 +3,7 @@
 Jeu de découverte et de mémorisation de citations, proverbes et maximes.
 
 - [Prototype alpha](https://tigreoslam23.github.io/ADM-Academie-des-Mots/) : six missions du chapitre I, conservées pour comparaison.
-- [Atelier ADM 2.15](https://tigreoslam23.github.io/ADM-Academie-des-Mots/adm-v03.html) : Mots en désordre, Mot Mystère, Puzzle-citation, L’Imposteur, Citation en péril, Carnet, Mémoire et progression.
+- [Atelier ADM 2.16](https://tigreoslam23.github.io/ADM-Academie-des-Mots/adm-v03.html) : Mots en désordre, Mot Mystère, Puzzle-citation, L’Imposteur, Citation en péril, Carnet, Mémoire et progression.
 
 Dans Mots en désordre, un mot apparaît brièvement à la fois dans un ordre aléatoire. Le joueur fige la révélation et saisit la citation mot par mot au clavier ADM compact, sans touches accentuées. Les lettres saisies et dévoilées sont affichées en capitales sans accents ; les ligatures se saisissent avec deux lettres (Œ → OE). Les citations réussies rejoignent son Carnet avec attribution, thème, sens et prochaine révision. Quand un thème ou les textes disponibles sont épuisés, l’interface l’explique et propose Carnet, Mémoire ou un autre thème.
 
@@ -96,3 +96,9 @@ Cinquième mode jouable : un mot de la citation est remplacé par un intrus. Le 
 Les six modes sont jouables. Citation en péril est un parcours en trois manches de 3, 5 puis 7 citations. Il alterne mot caché à saisir, intrus à repérer et puzzle à remettre en ordre. Chaque manche commence avec trois vies ; une validation erronée coûte une vie, et le score diminue avec le temps après cinq secondes de grâce. Le joueur passe manuellement à la manche suivante. Si les vies sont épuisées, les citations déjà réussies et leurs points restent acquis. Le parcours peut être repris après interruption et est inclus dans la sauvegarde JSON.
 
 Ce mode possède ses propres points, citations réussies et grade. Une citation rapporte des points une seule fois dans ce mode ; l’entraînement ultérieur est sans points. Les anciens profils et les anciennes sauvegardes restent compatibles. Les grades élevés restent calibrés pour la cible éditoriale de 300 textes ; le corpus actuel comporte 150 formulations jouables.
+
+## Atelier 2.16 — intrus accordés et tirages variés
+
+Dans L’Imposteur, chaque citation possède au moins deux remplacements relus pour éviter qu’un article, un singulier, un pluriel ou un adjectif voisin révèle la réponse. Sur 66 citations, une seconde position peut également être remplacée. Le mot intrus est choisi à chaque nouvelle partie ou rejeu parmi les propositions compatibles. La même sélection sert à l’épreuve d’intrus de Citation en péril.
+
+Une partie interrompue avec un ancien tirage est adaptée à ces nouvelles propositions lorsqu’elle reprend, tout en gardant son temps et ses erreurs. Les anciens exports JSON restent importables ; les points, citations et grades déjà acquis sont conservés.
