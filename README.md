@@ -3,7 +3,7 @@
 Jeu de découverte et de mémorisation de citations, proverbes et maximes.
 
 - [Prototype alpha](https://tigreoslam23.github.io/ADM-Academie-des-Mots/) : six missions du chapitre I, conservées pour comparaison.
-- [Atelier ADM 2.17](https://tigreoslam23.github.io/ADM-Academie-des-Mots/adm-v03.html) : Mots en désordre, Mot Mystère, Puzzle-citation, L’Imposteur, Citation en péril, Carnet, Mémoire et progression.
+- [Atelier ADM 2.18](https://tigreoslam23.github.io/ADM-Academie-des-Mots/adm-v03.html) : Mots en désordre, Mot Mystère, Puzzle-citation, L’Imposteur, Citation en péril, Carnet, Mémoire et progression.
 
 Dans Mots en désordre, un mot apparaît brièvement à la fois dans un ordre aléatoire. Le joueur fige la révélation et saisit la citation mot par mot au clavier ADM compact, sans touches accentuées. Les lettres saisies et dévoilées sont affichées en capitales sans accents ; les ligatures se saisissent avec deux lettres (Œ → OE). Les citations réussies rejoignent son Carnet avec attribution, thème, sens et prochaine révision. Quand un thème ou les textes disponibles sont épuisés, l’interface l’explique et propose Carnet, Mémoire ou un autre thème.
 
@@ -106,3 +106,7 @@ Une partie interrompue avec un ancien tirage est adaptée à ces nouvelles propo
 ## Atelier 2.17 — rejouer la même citation dans L’Imposteur
 
 Après avoir démasqué un intrus, un bouton relance immédiatement cette même citation sans points. Le mot intrus change à chaque rejeu immédiat et, sur les citations qui possèdent plusieurs positions compatibles, la place du remplacement peut également varier. Dans le Carnet, les citations déjà réussies dans L’Imposteur affichent « ↻ Intrus » pour les rejouer directement. Ces entraînements ne changent ni les points, ni les grades, ni les réussites déjà acquises.
+
+## Atelier 2.18 — installation de l’application
+
+ADM est installable depuis l’atelier : le manifeste fournit son identité et des icônes dédiées ; le bouton « Installer » lance l’invite du navigateur lorsqu’elle est disponible et affiche sinon les gestes à effectuer sur Android, iPhone, iPad ou ordinateur. Le service worker conserve la page et les portraits pour jouer hors connexion après une première visite en ligne. Une nouvelle version récupère la page depuis le réseau lorsqu’il est disponible et remplace les anciens fichiers du cache ; les profils et leurs sauvegardes locales ne sont pas effacés. Une installation sur un autre appareil ne transporte pas automatiquement les profils : l’export et l’import JSON restent nécessaires.

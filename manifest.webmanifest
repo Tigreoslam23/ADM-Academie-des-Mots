@@ -1,0 +1,16 @@
+{
+  "id": "./adm-v03.html",
+  "name": "ADM — L’Académie des Mots",
+  "short_name": "ADM",
+  "description": "Jeu de citations, proverbes et mémoire en six modes.",
+  "lang": "fr",
+  "start_url": "./adm-v03.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#101c2d",
+  "theme_color": "#101c2d",
+  "icons": [
+    {"src": "assets/icons/adm-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+    {"src": "assets/icons/adm-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ]
+}

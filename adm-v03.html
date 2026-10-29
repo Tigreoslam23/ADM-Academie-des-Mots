@@ -3,6 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101c2d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icons/adm-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/icons/adm-180.png">
   <title>ADM — L’Académie des Mots · Atelier</title>
   <style>
     :root{font-family:system-ui,sans-serif;color:#f7e9cb;background:#0c1522;--gold:#f4c970;--ink:#101c2d;--muted:#bcc9d1;--mint:#83e2cb}
@@ -46,10 +52,11 @@
   </style>
 </head>
 <body><div id="app">
-  <header><div><div class="brand">✦ ADM</div><small>L’Académie des Mots</small></div><div class="tools"><span id="activeAvatar" class="current-profile hidden"></span><button id="homeButton" class="quiet hidden">Accueil</button><button id="settingsButton" class="quiet" aria-label="Réglages">⚙ Réglages</button></div></header>
+  <header><div><div class="brand">✦ ADM</div><small>L’Académie des Mots</small></div><div class="tools"><span id="activeAvatar" class="current-profile hidden"></span><button id="homeButton" class="quiet hidden">Accueil</button><button id="installButton" class="quiet" aria-label="Installer l’application ADM">⬇ Installer</button><button id="settingsButton" class="quiet" aria-label="Réglages">⚙ Réglages</button></div></header>
   <main id="screen"></main>
-  <footer>Atelier 2.17 · 150 textes jouables · Rejeu direct de L’Imposteur.</footer>
+  <footer>Atelier 2.18 · 150 textes jouables · Installation et jeu hors connexion.</footer>
 </div><div id="pauseOverlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="pauseTitle"><div class="panel"><h2 id="pauseTitle">La page est refermée</h2><p class="muted">La révélation et les points sont figés. Ta partie a été enregistrée.</p><button id="resumeButton">Reprendre ma partie</button><p><button id="pauseHome" class="quiet">Retour à l’accueil</button></p></div></div>
+<div id="installOverlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="installTitle" style="z-index:14"><div class="panel"><h2 id="installTitle">Installer ADM</h2><p class="muted">Retrouve l’Académie des Mots depuis ton écran d’accueil. Après une première ouverture en ligne, le jeu fonctionne aussi hors connexion sur cet appareil.</p><p class="note">Sur Android : ouvre le menu ⋮ du navigateur, puis « Installer l’application » ou « Ajouter à l’écran d’accueil ».<br>Sur iPhone ou iPad : touche Partager, puis « Sur l’écran d’accueil ».<br>Sur ordinateur : utilise « Installer » dans le menu ou la barre d’adresse de ton navigateur.</p><p class="note">Les profils restent dans ce navigateur et sur cet appareil. Pour les transférer, utilise la sauvegarde dans Réglages.</p><button id="closeInstall" class="secondary">Fermer</button></div></div>
 <div id="settingsOverlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="settingsTitle" style="z-index:11"><div class="panel"><h2 id="settingsTitle">Réglages</h2><p class="muted">Adapte l’ambiance à ton envie.</p><label class="row"><input type="checkbox" id="motionSetting"> Animations</label><label class="row"><input type="checkbox" id="soundSetting"> Sons du jeu</label><label class="row"><input type="checkbox" id="musicSetting"> Musique</label><p class="note">La musique démarre après une interaction avec la page.</p><hr class="thin"><h3>Sauvegarde des profils</h3><p class="note">Télécharge un fichier pour garder tes Carnets, tes points, tes grades et tes parties en cours. Sur un autre appareil, importe ce fichier ici. Les profils déjà présents ne sont jamais écrasés.</p><div class="actions"><button id="exportBackup" class="secondary">Télécharger ma sauvegarde</button><button id="importBackup" class="secondary">Importer une sauvegarde</button></div><input id="backupFile" class="hidden" type="file" accept=".json,application/json" aria-label="Fichier de sauvegarde ADM"><p id="backupStatus" class="note" role="status" aria-live="polite"></p><button id="closeSettings">Fermer</button></div></div>
 <div id="explanationOverlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="explanationTitle" aria-describedby="explanationText" style="z-index:12"><div class="panel explanation-panel"><h2 id="explanationTitle">Le sens de la citation</h2><blockquote id="explanationQuote"></blockquote><p id="explanationText"></p><p id="explanationContext" class="note"></p><button id="closeExplanation">Fermer</button></div></div>
 <div id="avatarOverlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="avatarTitle" style="z-index:13"><div class="panel avatar-panel"><h2 id="avatarTitle">Personnalise ton avatar</h2><p class="muted">Choisis un personnage de la bibliothèque. Tes grades et sceaux transforment son portrait avec des parures distinctes.</p><h3>Compagnon</h3><div id="avatarOptions" class="avatar-options"></div><h3>Cadre gagné</h3><div id="frameOptions" class="frame-options"></div><p class="note">Les ornements ne modifient pas les points ni les grades.</p><button id="closeAvatar" class="quiet">Fermer</button></div></div>
@@ -1243,6 +1250,22 @@ function resumeSaved(){const s=session();if(!s)return;s.paused=true;persist();sc
 function resume(){const s=session();if(!s){$("pauseOverlay").classList.add("hidden");renderHome();return}s.paused=false;persist();$("pauseOverlay").classList.add("hidden");if(screen!=="game")renderGame();else if(s.phase==="observe")startClock()}
 $("resumeButton").onclick=resume;$("pauseHome").onclick=()=>{$("pauseOverlay").classList.add("hidden");renderHome()};
 $("homeButton").onclick=()=>{if(session())autoPause();$("pauseOverlay").classList.add("hidden");renderHome()};
+let installPrompt=null;
+const installed=()=>window.matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
+function resumeAfterInstall(){if(screen==="mystery")startMysteryClock();if(screen==="impostor")startImpostorClock();if(screen==="peril")startPerilClock()}
+window.addEventListener("beforeinstallprompt",event=>{event.preventDefault();installPrompt=event});
+window.addEventListener("appinstalled",()=>{installPrompt=null;$("installButton").classList.add("hidden");$("installOverlay").classList.add("hidden")});
+if(installed())$("installButton").classList.add("hidden");
+$("installButton").onclick=async()=>{
+  if(screen==="game")autoPause();if(["mystery","impostor","peril"].includes(screen))stopClock();
+  if(!installPrompt){$("installOverlay").classList.remove("hidden");return}
+  const prompt=installPrompt;installPrompt=null;
+  try{await prompt.prompt();await prompt.userChoice}catch(error){$("installOverlay").classList.remove("hidden")}
+  resumeAfterInstall();
+};
+$("closeInstall").onclick=()=>{$("installOverlay").classList.add("hidden");resumeAfterInstall()};
+$("installOverlay").onclick=event=>{if(event.target===$("installOverlay"))$("closeInstall").click()};
+if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js").catch(()=>{}));
 $("settingsButton").onclick=()=>{if(screen==="game")autoPause();if(["mystery","impostor","peril"].includes(screen))stopClock();$("motionSetting").checked=db.settings.motion;$("soundSetting").checked=db.settings.sound;$("musicSetting").checked=db.settings.music;$("exportBackup").disabled=!Object.keys(db.profiles).length;$("backupStatus").textContent="";$("settingsOverlay").classList.remove("hidden")};
 [["exportBackup",exportBackup],["importBackup",()=> $("backupFile").click()]].forEach(([id,action])=>$(id).onclick=action);
 $("backupFile").onchange=async e=>{const file=e.target.files?.[0];e.target.value="";if(file)await importBackup(file)};
