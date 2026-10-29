@@ -3,7 +3,7 @@
 Jeu de découverte et de mémorisation de citations, proverbes et maximes.
 
 - [Prototype alpha](https://tigreoslam23.github.io/ADM-Academie-des-Mots/) : six missions du chapitre I, conservées pour comparaison.
-- [Atelier ADM 2.16](https://tigreoslam23.github.io/ADM-Academie-des-Mots/adm-v03.html) : Mots en désordre, Mot Mystère, Puzzle-citation, L’Imposteur, Citation en péril, Carnet, Mémoire et progression.
+- [Atelier ADM 2.17](https://tigreoslam23.github.io/ADM-Academie-des-Mots/adm-v03.html) : Mots en désordre, Mot Mystère, Puzzle-citation, L’Imposteur, Citation en péril, Carnet, Mémoire et progression.
 
 Dans Mots en désordre, un mot apparaît brièvement à la fois dans un ordre aléatoire. Le joueur fige la révélation et saisit la citation mot par mot au clavier ADM compact, sans touches accentuées. Les lettres saisies et dévoilées sont affichées en capitales sans accents ; les ligatures se saisissent avec deux lettres (Œ → OE). Les citations réussies rejoignent son Carnet avec attribution, thème, sens et prochaine révision. Quand un thème ou les textes disponibles sont épuisés, l’interface l’explique et propose Carnet, Mémoire ou un autre thème.
 
@@ -102,3 +102,7 @@ Ce mode possède ses propres points, citations réussies et grade. Une citation 
 Dans L’Imposteur, chaque citation possède au moins deux remplacements relus pour éviter qu’un article, un singulier, un pluriel ou un adjectif voisin révèle la réponse. Sur 66 citations, une seconde position peut également être remplacée. Le mot intrus est choisi à chaque nouvelle partie ou rejeu parmi les propositions compatibles. La même sélection sert à l’épreuve d’intrus de Citation en péril.
 
 Une partie interrompue avec un ancien tirage est adaptée à ces nouvelles propositions lorsqu’elle reprend, tout en gardant son temps et ses erreurs. Les anciens exports JSON restent importables ; les points, citations et grades déjà acquis sont conservés.
+
+## Atelier 2.17 — rejouer la même citation dans L’Imposteur
+
+Après avoir démasqué un intrus, un bouton relance immédiatement cette même citation sans points. Le mot intrus change à chaque rejeu immédiat et, sur les citations qui possèdent plusieurs positions compatibles, la place du remplacement peut également varier. Dans le Carnet, les citations déjà réussies dans L’Imposteur affichent « ↻ Intrus » pour les rejouer directement. Ces entraînements ne changent ni les points, ni les grades, ni les réussites déjà acquises.
