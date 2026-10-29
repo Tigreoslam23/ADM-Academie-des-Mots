@@ -48,7 +48,7 @@
 <body><div id="app">
   <header><div><div class="brand">✦ ADM</div><small>L’Académie des Mots</small></div><div class="tools"><span id="activeAvatar" class="current-profile hidden"></span><button id="homeButton" class="quiet hidden">Accueil</button><button id="settingsButton" class="quiet" aria-label="Réglages">⚙ Réglages</button></div></header>
   <main id="screen"></main>
-  <footer>Atelier 2.16 · 150 textes jouables · Intrus accordés.</footer>
+  <footer>Atelier 2.17 · 150 textes jouables · Rejeu direct de L’Imposteur.</footer>
 </div><div id="pauseOverlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="pauseTitle"><div class="panel"><h2 id="pauseTitle">La page est refermée</h2><p class="muted">La révélation et les points sont figés. Ta partie a été enregistrée.</p><button id="resumeButton">Reprendre ma partie</button><p><button id="pauseHome" class="quiet">Retour à l’accueil</button></p></div></div>
 <div id="settingsOverlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="settingsTitle" style="z-index:11"><div class="panel"><h2 id="settingsTitle">Réglages</h2><p class="muted">Adapte l’ambiance à ton envie.</p><label class="row"><input type="checkbox" id="motionSetting"> Animations</label><label class="row"><input type="checkbox" id="soundSetting"> Sons du jeu</label><label class="row"><input type="checkbox" id="musicSetting"> Musique</label><p class="note">La musique démarre après une interaction avec la page.</p><hr class="thin"><h3>Sauvegarde des profils</h3><p class="note">Télécharge un fichier pour garder tes Carnets, tes points, tes grades et tes parties en cours. Sur un autre appareil, importe ce fichier ici. Les profils déjà présents ne sont jamais écrasés.</p><div class="actions"><button id="exportBackup" class="secondary">Télécharger ma sauvegarde</button><button id="importBackup" class="secondary">Importer une sauvegarde</button></div><input id="backupFile" class="hidden" type="file" accept=".json,application/json" aria-label="Fichier de sauvegarde ADM"><p id="backupStatus" class="note" role="status" aria-live="polite"></p><button id="closeSettings">Fermer</button></div></div>
 <div id="explanationOverlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="explanationTitle" aria-describedby="explanationText" style="z-index:12"><div class="panel explanation-panel"><h2 id="explanationTitle">Le sens de la citation</h2><blockquote id="explanationQuote"></blockquote><p id="explanationText"></p><p id="explanationContext" class="note"></p><button id="closeExplanation">Fermer</button></div></div>
@@ -722,7 +722,7 @@ function drawNotebookCards(){
   $("notebookCount").textContent=`${matches.length} citation(s) trouvée(s)${matches.length>visible.length?` · ${visible.length} affichée(s)`:""} · ${favorites.size} favori(s) dans le Carnet.`;
   $("notebookCards").innerHTML=visible.length?visible.map(id=>{
     const q=BY_ID[id],record=memoryRecord(id);
-    return `<article class="library-card"><span class="badge">${esc(q.theme)}</span><blockquote>« ${esc(q.text)} »</blockquote><p><strong>${esc(q.author)}</strong> · ${sourceLink(q)}</p>${q.sourceUrl?`<p class="note">${esc(q.anecdote)}</p>`:""}<p class="note">${esc(dueLabel(record))}${record.stage<3?` · Niveau ${record.stage+1}/3`:''}</p><div class="row"><button class="favorite-toggle" data-favorite-id="${esc(id)}" aria-pressed="${favorites.has(id)}" aria-label="${favorites.has(id)?'Retirer des favoris':'Ajouter aux favoris'} : ${esc(q.text)}">${favorites.has(id)?'★ Favori':'☆ Favori'}</button><button class="secondary" data-explain-id="${esc(id)}">Explication</button><button data-practice-id="${esc(id)}">${record.stage<3&&record.dueAt<=now?'Réviser maintenant':'S’entraîner'}</button><button class="secondary" data-replay-id="${esc(id)}" aria-label="Rejouer cette citation sans points : ${esc(q.text)}">↻ Rejouer</button></div></article>`;
+    return `<article class="library-card"><span class="badge">${esc(q.theme)}</span><blockquote>« ${esc(q.text)} »</blockquote><p><strong>${esc(q.author)}</strong> · ${sourceLink(q)}</p>${q.sourceUrl?`<p class="note">${esc(q.anecdote)}</p>`:""}<p class="note">${esc(dueLabel(record))}${record.stage<3?` · Niveau ${record.stage+1}/3`:''}</p><div class="row"><button class="favorite-toggle" data-favorite-id="${esc(id)}" aria-pressed="${favorites.has(id)}" aria-label="${favorites.has(id)?'Retirer des favoris':'Ajouter aux favoris'} : ${esc(q.text)}">${favorites.has(id)?'★ Favori':'☆ Favori'}</button><button class="secondary" data-explain-id="${esc(id)}">Explication</button><button data-practice-id="${esc(id)}">${record.stage<3&&record.dueAt<=now?'Réviser maintenant':'S’entraîner'}</button><button class="secondary" data-replay-id="${esc(id)}" aria-label="Rejouer cette citation sans points : ${esc(q.text)}">↻ Rejouer</button>${p.impostor?.completed.includes(id)?`<button class="secondary" data-impostor-id="${esc(id)}" aria-label="Rejouer cette citation dans L’Imposteur sans points : ${esc(q.text)}">↻ Intrus</button>`:""}</div></article>`;
   }).join(""):'<p class="muted">Aucune citation trouvée. Modifie les filtres ou découvre une citation en jouant.</p>';
   $("notebookMore").classList.toggle("hidden",matches.length<=visible.length);
   $("notebookCards").querySelectorAll("[data-favorite-id]").forEach(b=>b.onclick=()=>{
@@ -735,6 +735,7 @@ function drawNotebookCards(){
     startMemory(id,Math.min(record.stage,2),record.stage<3&&record.dueAt<=Date.now());
   });
   $("notebookCards").querySelectorAll("[data-replay-id]").forEach(b=>b.onclick=()=>startReplayQuote(b.dataset.replayId));
+  $("notebookCards").querySelectorAll("[data-impostor-id]").forEach(b=>b.onclick=()=>startImpostor(true,b.dataset.impostorId));
 }
 function renderMemoryHome(){
   const p=profile();if(!p){renderHome();return}
@@ -974,9 +975,11 @@ function impostorDecoys(q,index){
   const forms=Array.isArray(rule.forms)?rule.forms:IMPOSTOR_FORMS[rule.forms]||[];
   return forms.filter(word=>!used.has(normalize(word))&&normalize(word)!==original);
 }
-function newImpostorChoice(q){
-  const target=shuffle(impostorCandidates(q).filter(i=>impostorDecoys(q,i).length>=2))[0];
-  return target===undefined?null:{target,decoy:shuffle(impostorDecoys(q,target))[0]};
+function newImpostorChoice(q,previous=null){
+  const choices=impostorCandidates(q).flatMap(target=>impostorDecoys(q,target).map(decoy=>({target,decoy})));
+  if(!choices.length)return null;
+  const fresh=choices.filter(choice=>choice.decoy!==previous?.decoy);
+  return shuffle(fresh.length?fresh:choices)[0];
 }
 function repairImpostorTask(q,task){
   if(!task||impostorDecoys(q,task.target).includes(task.decoy))return;
@@ -994,10 +997,12 @@ function renderImpostorHome(){
   $("impostorStart").onclick=()=>startImpostor(false);$("impostorReplay").onclick=()=>startImpostor(true);
   if($("impostorResume"))$("impostorResume").onclick=renderImpostor;
 }
-function startImpostor(replay){
-  const p=profile();if(!p)return;const pool=impostorPool(p,replay);if(!pool.length)return renderImpostorHome();
+function startImpostor(replay,id=null,previous=null){
+  const p=profile();if(!p)return;
+  const pool=id?PLAYABLE_QUOTES.filter(q=>q.id===id&&replay&&p.impostor.completed.includes(id)):impostorPool(p,replay);
+  if(!pool.length)return renderImpostorHome();
   if(p.impostorRun&&!confirm("Une citation est interrompue pour ce profil. La remplacer ?"))return;
-  const q=shuffle(pool)[0],{target,decoy}=newImpostorChoice(q);
+  const q=shuffle(pool)[0],{target,decoy}=newImpostorChoice(q,previous);
   p.impostorRun={id:q.id,target,decoy,selected:null,wrong:[],errors:0,elapsed:0,replay};
   persist();renderImpostor();
 }
@@ -1044,10 +1049,11 @@ function checkImpostor(){
   }
   stopClock();const first=!run.replay&&!p.impostor.completed.includes(q.id),points=first?impostorAvailable(run):0,original=tokens(q)[run.target],decoy=impostorWord(run,q,run.target);
   if(first){p.impostor.completed.push(q.id);p.impostor.points+=points;if(!p.discovered.includes(q.id)){p.discovered.push(q.id);p.memory??={};p.memory[q.id]={stage:0,dueAt:Date.now()+DAY,attempts:0}}}
-  p.impostorRun=null;persist();refreshProgress(p);effect("win");renderImpostorResult(q,decoy,original,points);
+  p.impostorRun=null;persist();refreshProgress(p);effect("win");renderImpostorResult(q,decoy,original,points,{target:run.target,decoy:run.decoy});
 }
-function renderImpostorResult(q,decoy,original,points){
-  screen="impostor-result";$("screen").innerHTML=`<section class="panel"><span class="badge">Intrus repéré</span><h2>${points?esc(points)+' points gagnés':'Entraînement terminé'}</h2><div class="impostor-result"><p>« ${esc(decoy)} » remplaçait « ${esc(original)} ».</p><blockquote>« ${esc(q.text)} »</blockquote><p><strong>${esc(q.author)}</strong> · ${sourceLink(q)}</p></div><div class="actions"><button id="impostorNext">Citation suivante →</button><button id="impostorExplain" class="secondary">Explication</button><button id="impostorNotebook" class="quiet">Mon Carnet</button></div></section>`;
+function renderImpostorResult(q,decoy,original,points,previous){
+  screen="impostor-result";$("screen").innerHTML=`<section class="panel"><span class="badge">Intrus repéré</span><h2>${points?esc(points)+' points gagnés':'Entraînement terminé'}</h2><div class="impostor-result"><p>« ${esc(decoy)} » remplaçait « ${esc(original)} ».</p><blockquote>« ${esc(q.text)} »</blockquote><p><strong>${esc(q.author)}</strong> · ${sourceLink(q)}</p></div><div class="actions"><button id="impostorAgain">Rejouer cette citation · sans points</button><button id="impostorNext" class="secondary">Citation suivante →</button><button id="impostorExplain" class="secondary">Explication</button><button id="impostorNotebook" class="quiet">Mon Carnet</button></div></section>`;
+  $("impostorAgain").onclick=()=>startImpostor(true,q.id,previous);
   $("impostorNext").onclick=renderImpostorHome;$("impostorExplain").onclick=()=>openExplanation(q);$("impostorNotebook").onclick=renderNotebook;
 }
 let mysteryTheme="Tous les thèmes";
